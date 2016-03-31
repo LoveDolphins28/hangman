@@ -15,6 +15,28 @@ class Hangman:
         self.number_of_guesses = 0
         self.word_to_guess = self.random_word_to_guess()
         self.word_guessed = False
+        self.my_word = self.word_of_underlines(len(self.word_to_guess))
+        
+    def word_of_underlines(self, l):
+        wd = ''
+        for i in range (0, l):
+            wd += '_'
+        return wd
+    
+    def recompute_my_word(self, letter):
+        for pos in self.find_letter_positions_in_word(letter, self.word_to_guess):
+            self.my_word[pos] = letter
+            
+        
+    
+    def find_letter_positions_in_word(self, letter, word):
+        pos_list = []
+        
+        for i in range (0, len(word)):
+            if word[i] == letter:
+                pos_list.append(i)
+        
+        return pos_list
         
         
     def random_word_to_guess(self):
@@ -37,6 +59,7 @@ class Hangman:
             print('Please either guess a letter or the whole word:')
             print('gl your_letter for letter guess')
             print('gw your_word for word guess')
+            print('===============================================')
             
             user_input = stdin.readline()
             
@@ -49,18 +72,34 @@ class Hangman:
             else:
                 print('Invalid input. Please see usage.')
                 
+           
+                
     def guess_letter(self, letter):
         print ('You have guessed a letter: ' + letter)
+        
+        self.recompute_my_word(letter)
+        
+        
+        if self.my_word == self.word_to_guess:
+            self.word_guessed = True
+        self.show_my_word()    
+        
         self.number_of_guesses += 1
         self.play()
         
     def guess_word(self, word):
         print('You have guessed the whole word: ' + word)
+        
+        if word == self.word_to_guess:
+            self.word_guessed = True
+        self.show_my_word()
+        
         self.number_of_guesses += 2
         self.play()
+        
+    def show_my_word(self):
+        print("The word looks like this at the moment: " + self.my_word)
                     
-                    
-            
               
     def award_win(self):
         print('You won.')
