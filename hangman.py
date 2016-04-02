@@ -6,6 +6,8 @@ Created on 31 Mar 2016
 
 import random
 from sys import stdin
+from sys import stdout
+
 
 class Hangman:
     possible_words = ['car', 'hanged', 'lackadaisical', 'start', 'random']
@@ -16,6 +18,7 @@ class Hangman:
         self.word_to_guess = self.random_word_to_guess()
         self.word_guessed = False
         self.my_word = self.word_of_underlines(len(self.word_to_guess))
+        self.letters_tried = []
         
     def word_of_underlines(self, l):
         wd = ''
@@ -63,6 +66,7 @@ class Hangman:
          
         else:
             # Keep playing TODO
+            print('Guesses left: ' + str(self.max_number_of_guesses - self.number_of_guesses))
             print('Please either guess a letter or the whole word:')
             print('gl your_letter for letter guess')
             print('gw your_word for word guess')
@@ -82,7 +86,8 @@ class Hangman:
            
                 
     def guess_letter(self, letter):
-        print ('You have guessed a letter: ' + letter)
+        self.letters_tried.append(letter)
+        self.print_letters_tried()
         
         self.recompute_my_word(letter)
         
@@ -91,18 +96,27 @@ class Hangman:
             self.word_guessed = True
         self.show_my_word()    
         
-        self.number_of_guesses += 1
+        if len(self.find_letter_positions_in_word(letter, self.word_to_guess)) == 0:
+            self.number_of_guesses += 1
+        
         self.play()
         
+    def print_letters_tried(self):
+        stdout.write('Letters tried so far: ')
+        
+        for letter in self.letters_tried:
+            stdout.write(letter + ' ')
+        print()
+        
     def guess_word(self, word):
-        print('You have guessed the whole word: ' + word)
+        #print('You have guessed the whole word: ' + word)
         
         if word == self.word_to_guess:
             self.word_guessed = True
         else:   
             self.show_my_word()
+            self.number_of_guesses += 2
         
-        self.number_of_guesses += 2
         self.play()
         
     def show_my_word(self):
