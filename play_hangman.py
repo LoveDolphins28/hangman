@@ -10,3 +10,4 @@ hangman = hangman.Hangman()
 
 hangman.begin_new_game()
 
+
