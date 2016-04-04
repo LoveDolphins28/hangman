@@ -14,6 +14,9 @@ class Hangman:
     max_number_of_guesses = 10
     
     def __init__(self):
+        self.prep_for_new_game()
+        
+    def prep_for_new_game(self):
         self.number_of_guesses = 0
         self.word_to_guess = self.random_word_to_guess()
         self.word_guessed = False
@@ -49,43 +52,21 @@ class Hangman:
         return Hangman.possible_words[random.randint(0, 4)]
     
     def begin_new_game(self):
-        print('New game has begun.')
-        self.play()
-        
+        self.prep_for_new_game()
+          
     
-    def play(self):
+    def check_for_end(self):
         if self.word_guessed:
             self.award_win()
             return
             
-        
         if self.number_of_guesses == Hangman.max_number_of_guesses:
             self.notify_loser()
             return
             
-         
-        else:
-            # Keep playing TODO
-            print('Guesses left: ' + str(self.max_number_of_guesses - self.number_of_guesses))
-            print('Please either guess a letter or the whole word:')
-            print('gl your_letter for letter guess')
-            print('gw your_word for word guess')
-            print('===============================================')
-            
-            user_input = stdin.readline()
-            
-            if len(user_input.split(' ')) > 0 and user_input.split(' ')[0] == 'gl':
-                self.guess_letter(user_input.split(' ')[1].rstrip())
-                
-            elif len(user_input.split(' ')) > 0 and user_input.split(' ')[0] == 'gw':
-                self.guess_word(user_input.split(' ')[1].rstrip())    
-            
-            else:
-                print('Invalid input. Please see usage.')
-                
-           
-                
+                     
     def guess_letter(self, letter):
+        
         self.letters_tried.append(letter)
         self.print_letters_tried()
         
@@ -99,7 +80,7 @@ class Hangman:
         if len(self.find_letter_positions_in_word(letter, self.word_to_guess)) == 0:
             self.number_of_guesses += 1
         
-        self.play()
+        self.check_for_end()
         
     def print_letters_tried(self):
         stdout.write('Letters tried so far: ')
@@ -117,7 +98,8 @@ class Hangman:
             self.show_my_word()
             self.number_of_guesses += 2
         
-        self.play()
+        self.check_for_end()
+       
         
     def show_my_word(self):
         print('The word looks like this at the moment: ' + self.my_word)
