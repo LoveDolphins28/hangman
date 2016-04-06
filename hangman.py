@@ -60,11 +60,11 @@ class Hangman:
     
     def check_for_end(self):
         if self.word_guessed:
-            self.award_win()
+            self.gui.award_win()
             return
             
         if self.number_of_guesses == Hangman.max_number_of_guesses:
-            self.notify_loser()
+            self.gui.notify_loser()
             return
             
                      
@@ -108,13 +108,6 @@ class Hangman:
         self.check_for_end()
         
                     
-              
-    def award_win(self):
-        print('You won.')
-        
-        
-    def notify_loser(self):
-        print('You lost.')
         
         
           

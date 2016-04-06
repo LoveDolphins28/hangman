@@ -102,10 +102,15 @@ class HangmanGUI(Tk):
         else:
             tkMessageBox.showerror('Error', 'Please make a valid guess')
             
+    def award_win(self):
+        tkMessageBox.showinfo('Winner!', '''Congratulations. You won. 
+                                            Click on Restart to play again''')
         
+    def notify_loser(self):
+        tkMessageBox.showinfo('Loser!', '''You lost. Better luck next time! 
+                                           Click on Restart to play again''')
             
-             
-        
+               
     
 if __name__ == "__main__":
     hg = HangmanGUI(None)
