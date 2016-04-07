@@ -6,10 +6,11 @@ Created on 4 Apr 2016
 
 
 from Tkconstants import W
-from Tkinter import Tk, Button, Entry, Label, StringVar
+from Tkinter import Tk, Button, Entry, Label, StringVar, Canvas
 import tkMessageBox
 
 from hangman import Hangman
+from turtle_hangman import TurtleHangman
 
 
 class HangmanGUI(Tk):
@@ -17,6 +18,21 @@ class HangmanGUI(Tk):
     def __init__(self, parent):
         Tk.__init__(self, parent)
         self.parent = parent
+        
+        self.initialise()
+        self.prep_buttons()
+        
+    def prep_buttons(self):
+        new_game = Button(self, command=self.hangman.begin_new_game, text='Restart')
+        new_game.grid(column=2, row=5, sticky=W)
+        
+        guess_letter = Button(self, command=lambda: self.guess(True), text='Guess letter')
+        guess_letter.grid(column=3, row=5, sticky=W)
+        
+        guess_button = Button(self, command=lambda: self.guess(False), text='Guess word')
+        guess_button.grid(column=4, row=5, sticky=W)
+        
+    def initialise(self):
         self.hangman = Hangman(self)
         self.my_word = StringVar()
         self.my_word.set("Word: " + 
@@ -28,31 +44,29 @@ class HangmanGUI(Tk):
         self.guesses_left = StringVar()
         self.update_no_of_guesses()
         
-        
-        self.initialise()
-        
-    def initialise(self):
-        self.geometry('{}x{}'.format(600, 600))
+        self.geometry('{}x{}'.format(545, 400))
         
         self.grid()
         
-        new_game = Button(self, command = self.hangman.begin_new_game, text = 'Restart')
-        new_game.grid(column = 2, row = 5, sticky = W)
         
-        guess_letter = Button(self, command = lambda: self.guess(True), text = 'Guess letter')
-        guess_letter.grid(column = 3, row = 5, sticky = W)
+        word = Label(self, textvariable=self.my_word)
+        word.grid(column=1, row=7, sticky=W)
         
-        guess_button = Button(self, command = lambda: self.guess(False), text = 'Guess word')
-        guess_button.grid(column = 4, row = 5, sticky = W)
+        tried = Label(self, textvariable=self.tried_so_far)
+        tried.grid(column=1, row=8, sticky=W)
         
-        word = Label(self, textvariable = self.my_word)
-        word.grid(column = 9, row = 6, sticky = W)
+        no_guesses = Label(self, textvariable=self.guesses_left)
+        no_guesses.grid(column=1, row=9, sticky=W)
         
-        tried = Label(self, textvariable = self.tried_so_far)
-        tried.grid(column = 1, row = 8, sticky = W)
+        turtle_canvas = Canvas(self, width=300, height=450)
+        self.th = TurtleHangman(turtle_canvas)
+        turtle_canvas.grid(column=1, row=10, rowspan = 8, columnspan = 3)
         
-        no_guesses = Label(self, textvariable = self.guesses_left)
-        no_guesses.grid(column = 1, row = 9, sticky = W)
+        infotext = 'Hangman v1.0 by AML'
+        info = Label(self, text = infotext)
+        info.grid(column = 4, row = 12, columnspan = 2)
+       
+        
         
     def update_my_word(self):
         self.my_word.set('Word: ' + self.hangman.my_word)
@@ -78,12 +92,12 @@ class HangmanGUI(Tk):
         g_window.grid()
         
         entry = Entry(g_window)
-        entry.grid(column = 1, row = 1)
+        entry.grid(column=1, row=1)
        
         
-        confirm = Button(g_window, command = lambda: 
-                         self.send_input(guessing_letter, entry.get(), g_window), text = 'Confirm')
-        confirm.grid(column = 1, row = 3)
+        confirm = Button(g_window, command=lambda: 
+                         self.send_input(guessing_letter, entry.get(), g_window), text='Confirm')
+        confirm.grid(column=1, row=3)
         
        
      
@@ -98,17 +112,16 @@ class HangmanGUI(Tk):
                     self.hangman.guess_letter(user_guess)
                 else:
                     self.hangman.guess_word(user_guess)
+                    
                 g_window.destroy()
         else:
             tkMessageBox.showerror('Error', 'Please make a valid guess')
             
     def award_win(self):
-        tkMessageBox.showinfo('Winner!', '''Congratulations. You won. 
-                                            Click on Restart to play again''')
+        tkMessageBox.showinfo('Winner!', 'You won. Click on Restart to play again')
         
     def notify_loser(self):
-        tkMessageBox.showinfo('Loser!', '''You lost. Better luck next time! 
-                                           Click on Restart to play again''')
+        tkMessageBox.showinfo('Loser!', 'You lost. Word was *' + self.hangman.word_to_guess + '*. Click on Restart to play again') 
             
                
     
