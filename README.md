@@ -18,6 +18,7 @@ of the hanged man.
 ## How to run
 `python hangman_gui.py`
 * You can edit the list of possible words which is found inside hangman.py
+* This is tested and working under Python 2.7 and OSX El Capitan
 
 ## To do
 * Document the code
